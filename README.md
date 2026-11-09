@@ -29,3 +29,10 @@ The deliberate trade-off: weeks are pure 7-day buckets counted from the fiscal-y
 - **Quarter lengths.** Quarters 1–3 are 91 days (13 weeks). Quarter 4 absorbs the 365th day (and 366th in leap years) as a 14th week, so a leap-year Q4 has 14 weeks rather than 13.
 - **Year numbering.** `starts_in` labels the fiscal year by the calendar year it begins in (Apr 2024 → FY 2024). `ends_in` labels it by the calendar year it ends in (Apr 2024 → Mar 2025 → FY 2025). Mixing the two across systems is the most common source of "why are these numbers one off" bugs — pick one per integration.
 - **December start.** A fiscal year starting in December spans a calendar-year boundary; dates in January still belong to the fiscal year that started the previous December.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
